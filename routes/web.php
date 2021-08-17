@@ -25,20 +25,48 @@ Route::get('/', function () {
     //     resource_path("posts/my-fourth-post.html")
     // );
 
-    $files = File::files(resource_path("posts/"));
+    // $files = File::files(resource_path("posts/"));
     // $posts = [];
 
-    $posts = array_map(function ($file) {
-        $document = YamlFrontMatter::parseFile($file);
-        return new Post(
-            $document->title,
-            $document->excerpt,
-            $document->date,
-            $document->body(),
-            $document->slug
-        );
-    }, $files);
+    // $posts = collect($files)->map(function ($file) {
+    //     $document = YamlFrontMatter::parseFile($file);
+    //     return new Post(
+    //         $document->title,
+    //         $document->excerpt,
+    //         $document->date,
+    //         $document->body(),
+    //         $document->slug
+    //     );
+    // });
 
+    // find all the files in the post directory and collect them into a collection and loop over or map over each item and reach one, parse that file into the  $document once then we ve got the collection of document map over the second time and this time we gonna build up our own post object and pass it to view
+    $posts = collect($files = File::files(resource_path("posts/"))) //assign File:: files(resource_path...) in $files as inline
+        ->map(
+            fn ($file) => YamlFrontMatter::parseFile($file)
+        )
+        ->map(
+            fn ($document) =>  new Post(
+                $document->title,
+                $document->excerpt,
+                $document->date,
+                $document->body(),
+                $document->slug
+            )
+        );
+
+    // same functional with above $posts= collect() codeblock
+    // $posts = array_map(function ($file) {
+    //     $document = YamlFrontMatter::parseFile($file);
+    //     return new Post(
+    //         $document->title,
+    //         $document->excerpt,
+    //         $document->date,
+    //         $document->body(),
+    //         $document->slug
+    //     );
+    // }, $files);
+
+    // same functional with above $posts= collect() and $posts=array_map codeblock
     // foreach ($files as $file) {
     //     $document = YamlFrontMatter::parseFile($file);
 
