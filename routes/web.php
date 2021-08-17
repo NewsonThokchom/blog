@@ -1,7 +1,8 @@
 <?php
 
+use App\Models\Post;
 use Illuminate\Support\Facades\Route;
-
+use Spatie\YamlFrontMatter\YamlFrontMatter;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -14,23 +15,46 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('posts');
+
+    // // $posts = Post::all()[0]->getPathname();// getPathname() is used to get file path and [0] is the array index
+    // $posts = Post::all()[0]->getContents(); // getContents() is used to get file contents
+    // // $posts = Post::all()[0]->getContents(); // getContents() is used to get file contents
+    // ddd(Post::all());
+
+    // $document = YamlFrontMatter::parseFile(
+    //     resource_path("posts/my-fourth-post.html")
+    // );
+
+    $files = File::files(resource_path("posts/"));
+    $posts = [];
+    foreach ($files as $file) {
+        $document = YamlFrontMatter::parseFile($file);
+
+        $posts[] = new Post(
+            $document->title,
+            $document->excerpt,
+            $document->date,
+            $document->body(),
+            $document->slug
+        );
+    }
+    // ddd($posts[0]);
+
+    return view('posts', [
+        'posts' => $posts
+    ]);
+
+    // return view('posts', [
+    //     'posts' => Post::all()
+    // ]);
 });
 
 Route::get('/posts/{post}', function ($slug) {
+    $post = Post::find($slug);
 
-
-    if (!file_exists($path = __DIR__ . "/../resources/posts/{$slug}.html")) {
-        abort(404);
-        // return redirect('/');
-    }
-
-    // caching the post for 5 seconds
-    $post = cache()->remember("posts.{$slug}", 5, fn () => file_get_contents($path)); //using arrow function
-    // // using normal function
-    //  function () use ($path) { var_dump('file_get_contents'); return  file_get_contents($path);}); // end using normal function
-
-    return view('post', ['post' => $post]);
+    return view('post', [
+        'post' => $post
+    ]);
 })->where('post', '[A-z_-]+'); // 'post' is the name of the wildcard and the second one is the regular expression (ROUTE WILDCARD CONSTRAINTS)
     // ->whereAlpha('post');
     // ->whereAlphaNumeric('post');

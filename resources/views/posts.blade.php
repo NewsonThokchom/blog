@@ -11,7 +11,21 @@
 </head>
 
 <body>
-    <article>
+    @foreach ($posts as $post)
+        <article>
+
+            <h1>
+                <a href="/posts/{{ $post->slug }}"> {!! $post->title !!} </a>
+            </h1>
+            <div>{{ $post->excerpt }}</div>
+
+            {{-- <p>{!! $post->body !!}</p> --}}
+
+        </article>
+    @endforeach
+
+
+    {{-- <article>
         <h1>
             <a href="/posts/my-first-post">My First Post</a>
         </h1>
@@ -48,7 +62,7 @@
             electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of
             Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like
             Aldus PageMaker including versions of Lorem Ipsum.</p>
-    </article>
+    </article> --}}
 </body>
 
 </html>
