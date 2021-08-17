@@ -40,19 +40,19 @@ Route::get('/', function () {
     // });
 
     // find all the files in the post directory and collect them into a collection and loop over or map over each item and reach one, parse that file into the  $document once then we ve got the collection of document map over the second time and this time we gonna build up our own post object and pass it to view
-    $posts = collect($files = File::files(resource_path("posts/"))) //assign File:: files(resource_path...) in $files as inline
-        ->map(
-            fn ($file) => YamlFrontMatter::parseFile($file)
-        )
-        ->map(
-            fn ($document) =>  new Post(
-                $document->title,
-                $document->excerpt,
-                $document->date,
-                $document->body(),
-                $document->slug
-            )
-        );
+    // $posts = collect($files = File::files(resource_path("posts/"))) //assign File:: files(resource_path...) in $files as inline
+    //     ->map(
+    //         fn ($file) => YamlFrontMatter::parseFile($file)
+    //     )
+    //     ->map(
+    //         fn ($document) =>  new Post(
+    //             $document->title,
+    //             $document->excerpt,
+    //             $document->date,
+    //             $document->body(),
+    //             $document->slug
+    //         )
+    //     );
 
     // same functional with above $posts= collect() codeblock
     // $posts = array_map(function ($file) {
@@ -80,13 +80,13 @@ Route::get('/', function () {
     // }
     // ddd($posts[0]);
 
-    return view('posts', [
-        'posts' => $posts
-    ]);
-
     // return view('posts', [
-    //     'posts' => Post::all()
+    //     'posts' => $posts
     // ]);
+
+    return view('posts', [
+        'posts' => Post::all()
+    ]);
 });
 
 Route::get('/posts/{post}', function ($slug) {
