@@ -54,4 +54,16 @@ class Post
         return static::all()->firstWhere('slug', $slug); // fetch all from static all() function 
 
     }
+
+    public static function findOrFail($slug)
+    {
+        // of all the blog posts, find the one with a slug that matches the one that was requested.
+        $post =  static::find($slug); // fetch all from static all() function
+
+        if (!$post) {
+            throw new ModelNotFoundException();
+        }
+
+        return $post;
+    }
 }
