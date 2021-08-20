@@ -20,13 +20,10 @@ Route::get('/', function () {
     ]);
 });
 
+
 Route::get('/posts/{post}', function ($slug) {
-    $post = Post::find($slug);
 
     return view('post', [
-        'post' => $post
+        'post' => Post::findOrFail($slug)
     ]);
-})->where('post', '[A-z_-]+'); // 'post' is the name of the wildcard and the second one is the regular expression (ROUTE WILDCARD CONSTRAINTS)
-    // ->whereAlpha('post');
-    // ->whereAlphaNumeric('post');
-    // ->whereNumber('post');
+});
