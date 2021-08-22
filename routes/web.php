@@ -17,7 +17,8 @@ use Spatie\YamlFrontMatter\YamlFrontMatter;
 
 Route::get('/', function () {
     return view('posts', [
-        'posts' => Post::all()
+        // 'posts' => Post::all() ////Triggered N+1 problems
+        'posts' => Post::with('category')->get() // Eager loading can solve n+1 problem
     ]);
 });
 
